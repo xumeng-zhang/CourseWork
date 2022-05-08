@@ -112,7 +112,7 @@ $$
     \end{figure}
 
 
-图\ref{fig:SDE1_alpha}说明$\alpha$ 越大收敛的速度越快；图\ref{fig:SDE1_sigma}说明$\sigma$ 越大噪声的振荡越大；图\ref{fig:SDE1_alpha}和图\ref{fig:SDE1_alpha}说明$v$ 决定$X_t$最终的稳态，而$x_0$决定$X_t$的初态。
+图\ref{fig:SDE1_alpha}说明$\alpha$ 越大收敛的速度越快；图\ref{fig:SDE1_sigma}说明$\sigma$ 越大噪声的振荡越大；图\ref{fig:SDE1_alpha}和图\ref{fig:SDE1_alpha}说明$v$ 决定$X_t$最终的稳态，而$x_0$决定$X_t$的初态。我们看到正如我们预期的一样，当$\sigma=0, v = x_0$的时候，初态就是稳态，且没有噪声，轨道是一条直线。
 
 我们现在用Monte-Carlo模拟查看不同参数下$X_t$稳态分布的期望与方差。下面的实验都是在控制单一变量的条件下进行的，控制的变量默认为 $\alpha = 10, \ v=1,\ \sigma=1 , \ x_0 = 0$。
 
@@ -123,9 +123,9 @@ $$
     \hline
     $\alpha$ & $E(X_1)$ & $D(X_1)$ & $v$    & $E(X_1)$ & $D(X_1)$ \\ \hline
     1     & 0.636873 & 0.004301 & 1    & 1.000939  & 0.000513 \\
-    2     & 0.869714 & 0.002371 & 2    & 2.000912  & 0.000513 \\
-    5     & 0.99551  & 0.000966 & 5    & 5.000832  & 0.000513 \\
-    10    & 1.000939 & 0.000513 & 10   & 10.000699 & 0.000513 \\ \hline 
+    5     & 0.995510 & 0.000966 & 2    & 2.000912  & 0.000513 \\
+    10     & 1.000939  & 0.000513 & 5    & 5.000832  & 0.000513 \\
+    100    & 0.999987 & 0.000101 & 10   & 10.000699 & 0.000513 \\ \hline 
     $\sigma$ & $E(X_1)$ & $D(X_1)$ & $x_0$ & $E(X_1)$ & $D(X_1)$ \\ \hline
     0.1   & 1.00007  & 5e-06    & 0    & 1.000939  & 0.000513 \\
     1.0   & 1.000939 & 0.000513 & 2    & 1.000992  & 0.000513 \\
@@ -133,6 +133,8 @@ $$
     5.0   & 1.004799 & 0.012815 & 10   & 1.001204  & 0.000513 \\ \hline
     \end{tabular}
 \end{table}
+
+
     
 实验结果表明，$v$与$E(X_1)$正比，$\sigma$的平方与$D(X_1)$正比，$\alpha$和$x_0$与这两个量无关。
 
@@ -144,13 +146,13 @@ $$
 $$
 \left\{\begin{array}{l}
 d X_{t}=\alpha\left(v-X_{t}\right) d t+\sigma d B_{t} \\
-d S_{t} = \alpha\left(X_{t}-S_{t}\right) d t+\hat{\sigma_1} dB_t + \hat{\sigma_2} dW_t\\
+d S_{t} = \theta \left(X_{t}-S_{t}\right) d t+\hat{\sigma_1} dB_t + \hat{\sigma_2} dW_t\\
 X_{0}=x_{0}, \ S_0 = s_0
 \end{array}\right.
 $$
 其中 $\alpha, v, \sigma, \theta, \hat{\sigma_1}, \hat{\sigma_2}, x_{0}, s_0$ 为常数。
 
-这个方程中可以将 $X_t$ 看作是股票价值，$S_t$ 看作是股票价格。当价格高于价值是，市场会对股票有一种看衰的期望；股票价格也将会随之下降，当价格低于价值时，市场就会对股票看好，价格也将随之上升。
+这个方程中可以将 $X_t$ 看作是股票价值，$S_t$ 看作是股票价格。当价格高于价值是，市场会对股票有一种看衰的期望；股票价格也将会随之下降，当价格低于价值时，市场就会对股票看好，价格也将随之上升。股票价格的方程与上面的随机微分方程相同，所以我们看一看价值 $S_t$ 方程的解的轨道。
 
 
 
@@ -161,6 +163,10 @@ $$
     \label{fig:SDE2_S}
     \end{figure}
 
+
+我们看到$S_t$和$X_t$的曲线是十分相似的，所以我们初步推断$S_t$是受$X_t$影响，不断趋向$X_t$，最终区域稳态$v$。
+
+
 \begin{figure}[H]
     \centering
     \includegraphics[scale=.6]{随机微分方程解2的多条轨道SX-T.png}
@@ -169,6 +175,8 @@ $$
     \end{figure}
 
 
+我们画出了价格与价值比值曲线随时间$T$的变化，可以看到他很快就趋于1，然后受噪声和随机性的影响不断振荡。
+
 \begin{figure}[H]
     \centering
     \includegraphics[scale=.6]{随机微分方程解2的多条轨道Ratio-T.png}
@@ -176,12 +184,18 @@ $$
     \label{fig:SDE2_Ratio}
     \end{figure}
 
+
+接下来我们实验观察参数对轨道的影响。我们的所有实验都是在控制变量的条件下进行的，被控制的变量默认为$\alpha=1, v=3, \sigma=1, \theta=100, \sigma_1 = \sigma_2 = 1, x_0=s_0=2$。同样地，$d_t = 0.01$，一共取100个个点，区间是$[0, 1]$。
+
+
 \begin{figure}[H]
     \centering
     \includegraphics[scale=.6]{随机微分方程解2参数alpha.png}
     \caption{参数 $\alpha$ 对随机微分方程2解的轨道影响}
     \label{fig:SDE12_alpha}
     \end{figure}
+
+首先，$\alpha$ 以与图\ref{fig:SDE1_alpha}相似的方式，通过影响价值曲线$X_t$的方式影响$S_t$。$\alpha$决定了两者向稳态的收敛速率。
 
 
 \begin{figure}[H]
@@ -191,6 +205,7 @@ $$
     \label{fig:SDE2_theta}
     \end{figure}
 
+$\theta$ 同样决定了价格曲线$S_t$收敛的速率，当$\theta$过小的时候收敛很慢，但是当$\theta$过大的时候就会发生振荡，这是因为将$S_t$向$X_t$修正的时候，修正过大。
 
 
 \begin{figure}[H]
@@ -200,6 +215,10 @@ $$
     \label{fig:SDE2_sigma}
     \end{figure}    
 
+
+$\sigma_1$ 和 $\sigma_2$ 同样还是印象正态分布噪音的方差
+
+
 \begin{figure}[H]
     \centering
     \includegraphics[scale=.6]{随机微分方程解2参数初值.png}
@@ -207,7 +226,28 @@ $$
     \label{fig:SDE2_x0}
     \end{figure}
 
+$v$ 代表了$S_t$ 和 $X_t$ 最终的稳态，而$x_0$和$s_0$表示两条曲线的初值，我们可以发现$S_t$很快向$X_t$收敛，这里是因为$\alpha\theta dt = 1$的原因。
 
+
+\begin{table}[H]
+    \centering
+    \caption{不同参数下的 $E(S_1)$ 和 $D(S_1)$}
+    \begin{tabular}{l|l|l|l|l|l}
+    \hline
+    $\alpha$                           & $E(S_1)$  & $D(S_1)$  & $\theta$               & $E(S_1)$  & $D(S_1)$  \\ \hline
+    1                               & 2.636873 & 0.004301 & 1                   & 3.000939 & 0.000513 \\ 
+    5                               & 2.99551  & 0.000966 & 10                  & 3.000939 & 0.000513 \\ 
+    10                              & 3.000939 & 0.000513 & 100                 & 3.000939 & 0.000513 \\ 
+    100                             & 2.999987 & 0.000101 & 1000000                 & 3.000939 & 0.000513 \\ \hline
+    $\sigma,\ \sigma_1,\ \sigma_2$ & $E(S_1)$  & $D(S_1)$  & $v, x_0, s_0$ & $E(S_1)$  & $D(S_1)$  \\ \hline
+    1, 1, 1                   & 3.000939 & 0.000513 & 3, 2, 2       & 3.000939 & 0.000513 \\ 
+    1, 1000, 1                 & 3.000939 & 0.000513 & 5, 2, 2       & 5.000885 & 0.000513 \\ 
+    1, 1, 1000                  & 3.000939 & 0.000513 & 3, 7, 2       & 3.004932 & 0.000513 \\ 
+    10, 1, 1                  & 3.009625 & 0.05126  & 3, 2, 7       & 3.004799 & 0.000513 \\ \hline
+    \end{tabular}
+    \end{table}
+
+我们看到$\alpha$与$D(S_1)$相关，$\theta$与期望和方差都不相关，$\sigma$的平方与$D(S_1)$成正比，$\sigma_1$与$\sigma_2$与$D(S_1)$成正比，$v$在理想情况下等于$E(S_1)$，$x_0$与$s_0$没有直接关系，但是是在能够在迭代步数内收敛的情况下。
 
 
 
@@ -222,6 +262,6 @@ $$
 
 
 
-\bibliographystyle{plain}
-\bibliography{references}
+% \bibliographystyle{plain}
+% \bibliography{references}
 \end{document}
